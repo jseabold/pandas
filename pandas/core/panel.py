@@ -1166,7 +1166,8 @@ class LongPanel(Panel, Picklable):
             index -> minor axis, columns -> items
         """
         loc = self.major_axis.indexMap[key]
-        mat = np.array(self.values.T.reshape((self.shape))[:,loc,:]).T
+        I,N,K = self.shape
+        mat = np.array(self.values.reshape((K,N,I))[:,loc,:])
         return DataFrame(mat, index=self.minor_axis, columns=self.items)
 
     def minor_xs(self, key):
@@ -1184,7 +1185,8 @@ class LongPanel(Panel, Picklable):
             index -> major axis, columns -> items
         """
         loc = self.minor_axis.indexMap[key]
-        mat = np.array(self.values.T.reshape((self.shape))[:,:,loc]).T
+        I,N,K = self.shape
+        mat = np.array(self.values.reshape((K,N,I))[loc,:,:])
         return DataFrame(mat, index=self.major_axis, columns=self.items)
 
     @property
