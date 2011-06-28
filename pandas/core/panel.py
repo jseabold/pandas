@@ -669,10 +669,7 @@ class WidePanel(Panel, PandasGeneric):
 
         major_labels = np.arange(N).repeat(K)[selector]
 
-        # Anyone think of a better way to do this? np.repeat does not
-        # do what I want
-        minor_labels = np.arange(K).reshape(1, K)[np.zeros(N, dtype=int)]
-        minor_labels = minor_labels.ravel()[selector]
+        minor_labels = np.tile(np.arange(K), N)[selector]
 
         if filter_observations:
             mask = selector
