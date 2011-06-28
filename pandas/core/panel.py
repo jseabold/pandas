@@ -1064,8 +1064,8 @@ class LongPanel(Panel, Picklable):
         LongPanel
         """
         #TODO: use genfromtxt?
-        from pandas.io.parsers import parseCSV
-        data = parseCSV(filepath, header, skiprows, na_values)
+        from pandas.io.parsers import read_csv
+        data = read_csv(filepath, header, skiprows, na_values)
         return cls.fromRecords(data, major_field, minor_field, factors=None, 
                                 exclude=None)
 
