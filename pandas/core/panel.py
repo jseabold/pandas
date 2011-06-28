@@ -1052,6 +1052,10 @@ class LongPanel(Panel, Picklable):
         ----------
         filepath : str
             Path to csv file.
+        major_field : str
+            The name of the time column
+        minor_field : str
+            The name of the panel column
         header : int
             The line that contains the header information. This is zero-based.
         skiprows : int, iterable, or None
@@ -1146,6 +1150,42 @@ class LongPanel(Panel, Picklable):
         names = ['major', 'minor'] + list(self.items)
 
         return np.rec.fromarrays(arrays, names=names)
+
+    def major_xs(self, key):
+        """
+        Return slice of panel along major axis
+
+        Parameters
+        ----------
+        key : object
+            Major axis label
+
+        Returns
+        -------
+        y : DataFrame
+            index -> minor axis, columns -> items
+        """
+        loc = self.major_axis.indexMap[key]
+        mat = np.array(self.values.T.reshape((self.shape))[:,loc,:]).T
+        return DataFrame(mat, index=self.minor_axis, columns=self.items)
+
+    def minor_xs(self, key):
+        """
+        Return slice of panel along minor axis
+
+        Parameters
+        ----------
+        key : object
+            Minor axis label
+
+        Returns
+        -------
+        y : DataFrame
+            index -> major axis, columns -> items
+        """
+        loc = self.minor_axis.indexMap[key]
+        mat = np.array(self.values.T.reshape((self.shape))[:,:,loc]).T
+        return DataFrame(mat, index=self.major_axis, columns=self.items)
 
     @property
     def columns(self):
