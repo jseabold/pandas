@@ -1043,6 +1043,33 @@ class LongPanel(Panel, Picklable):
         return len(self.index)
 
     @classmethod
+    def fromCSV(cls, filepath, major_field, minor_field, header=0, skiprows=None, 
+                    na_values=None):
+        """
+        Parse CSV file into a LongPanel object.
+
+        Parameters
+        ----------
+        filepath : str
+            Path to csv file.
+        header : int
+            The line that contains the header information. This is zero-based.
+        skiprows : int, iterable, or None
+            An iterable containing the lines to skip.
+        na_values : str or None
+            The string denoting missing values.
+
+        Returns
+        -------
+        LongPanel
+        """
+        #TODO: use genfromtxt?
+        from pandas.io.parsers import parseCSV
+        data = parseCSV(filepath, header, skiprows, na_values)
+        return cls.fromRecords(data, major_field, minor_field, factors=None, 
+                                exclude=None)
+
+    @classmethod
     def fromRecords(cls, data, major_field, minor_field,
                     factors=None, exclude=None):
         """
