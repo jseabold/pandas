@@ -1040,7 +1040,7 @@ class LongPanel(Panel, Picklable):
         return len(self.index)
 
     @classmethod
-    def fromCSV(cls, filepath, major_field, minor_field, header=0, skiprows=None, 
+    def fromCSV(cls, filepath, major_field, minor_field, header=0, skiprows=None,
                     na_values=None):
         """
         Parse CSV file into a LongPanel object.
@@ -1067,7 +1067,7 @@ class LongPanel(Panel, Picklable):
         #TODO: use genfromtxt?
         from pandas.io.parsers import read_csv
         data = read_csv(filepath, header, skiprows, na_values)
-        return cls.fromRecords(data, major_field, minor_field, factors=None, 
+        return cls.fromRecords(data, major_field, minor_field, factors=None,
                                 exclude=None)
 
     @classmethod
@@ -1137,14 +1137,22 @@ class LongPanel(Panel, Picklable):
 
         return LongPanel(values, items, index, factors=factor_dict)
 
-    def toRecords(self):
+    def toRecords(self, major_name=None, minor_name=None):
+        """
+        Returns a record array
+        """
         major = np.asarray(self.major_axis).take(self.index.major_labels)
         minor = np.asarray(self.minor_axis).take(self.index.minor_labels)
 
         arrays = [major, minor] + list(self.values[:, i]
                                        for i in range(len(self.items)))
 
-        names = ['major', 'minor'] + list(self.items)
+        #TODO: have Index carry around major and minor names, make these the default
+        if major_name is None:
+            major_name = 'major'
+        if minor_name is None:
+            minor_name = 'minor'
+        names = [major_name, minor_name] + list(self.items)
 
         return np.rec.fromarrays(arrays, names=names)
 
