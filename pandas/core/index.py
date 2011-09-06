@@ -52,7 +52,8 @@ class Index(np.ndarray):
             if not isinstance(data, (list, tuple)):
                 data = list(data)
             subarr = np.empty(len(data), dtype=dtype)
-            subarr[:] = data
+            for i in range(len(data)):
+                subarr[i] = data[i]
         return subarr.view(cls)
 
     def summary(self):
